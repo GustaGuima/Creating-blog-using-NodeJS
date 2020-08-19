@@ -5,9 +5,9 @@ const bodyParser = require('body-parser');
 const app = express();
 const admin = require('./routes/admin');
 const path = require('path');
-const { dirname } = require('path');
 
-//const mongoose = require('mongoose');
+
+const mongoose = require('mongoose');
 
 //Configuraçoes
     //Body-Parser
@@ -18,8 +18,12 @@ const { dirname } = require('path');
         'handlebars', handlebars({extname: "handlebars",defaultLayout: "main",layoutsDir: "views/layout", }));
         app.set('view engine', 'handlebars');
     //Mongoose
-
-
+        mongoose.Promise = global.Promise;
+        mongoose.connect('mongodb://localhost/blogapp').then(() => {
+            console.log('Conectado ao MongoDB...');
+        }).catch((err) => {
+            console.log('Erro ao Conectar ao MongoDB: ' + err);
+        });
     //Public
         app.use(express.static(path.join(__dirname, 'public')));
 //Rotas
